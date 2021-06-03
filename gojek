@@ -1,0 +1,485 @@
+<?php
+/*
+ * WEBBASE APPLIKASI
+ *
+ * Copyright (c) 2014
+ *
+ * file 	: dashboard_model.php
+ * author 	: Rully Ikhsan
+ */
+/*----------------------------------------------------------*/
+
+class Dashboard_model extends Model {
+
+	// ---- Constructor
+	function __construct()
+	{
+		parent :: Model();
+
+	}
+
+	/* Get Dashboard Chart */	
+	function getAllDashboard(){
+		$this->db = $this->load->database('ems',true);
+		
+        $query = $this -> db -> query( "
+        SELECT
+            date( CURDATE() ) AS tglnow,
+            'DATA' as ket,
+            COUNT( CASE WHEN `bucket` = 'CPD' THEN STATUS END ) AS CPD,
+            COUNT( CASE WHEN `bucket` = 'XDPD' THEN STATUS END ) AS XDPD,
+            COUNT( CASE WHEN `bucket` = '30DPD' THEN STATUS END ) AS 30DPD,
+            COUNT( CASE WHEN `bucket` = '60DPD' THEN STATUS END ) AS 60DPD,
+            COUNT( CASE WHEN `bucket` = '90DPD' THEN STATUS END ) AS 90DPD,
+            COUNT( CASE WHEN `company` = '0' THEN STATUS END ) AS totdat
+        FROM
+            `campains` AS t1
+        WHERE
+            `company` = 0
+            AND date(tgl) = curdate( )
+        GROUP BY
+            tglnow
+        UNION ALL
+        SELECT
+            date( CURDATE() ) AS tglnow,
+            'CONTACT' as ket,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = 'CPD' THEN `status` END ) AS CPD,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = 'XDPD' THEN STATUS END ) AS od1,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = '30DPD' THEN STATUS END ) AS od2,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = '60DPD' THEN STATUS END ) AS od3,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = '90DPD' THEN STATUS END ) AS od4,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' THEN STATUS END ) AS totdat
+        FROM
+            `campains` AS t1
+        WHERE
+            `company` = 0
+            AND date(tgl) = curdate( )
+        GROUP BY
+            tglnow
+        UNION ALL
+        SELECT
+            date( CURDATE() ) AS tglnow,
+            'UNCONTACT' as ket,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = 'CPD' THEN `status` END ) AS CPD,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = 'XDPD' THEN STATUS END ) AS od1,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = '30DPD' THEN STATUS END ) AS od2,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = '60DPD' THEN STATUS END ) AS od3,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = '90DPD' THEN STATUS END ) AS od4,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' THEN STATUS END ) AS totdat
+        FROM
+            `campains` AS t1
+        WHERE
+            `company` = 0
+            AND date(tgl) = curdate( )
+        GROUP BY
+            tglnow
+        UNION ALL
+        SELECT
+            date( CURDATE() ) AS tglnow,
+            'INVALID' as ket,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = 'CPD' THEN `status` END ) AS CPD,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = 'XDPD' THEN STATUS END ) AS od1,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = '30DPD' THEN STATUS END ) AS od2,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = '60DPD' THEN STATUS END ) AS od3,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = '90DPD' THEN STATUS END ) AS od4,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' THEN STATUS END ) AS totdat
+        FROM
+            `campains_fail_gojek` AS t1
+        WHERE
+            `company` = 0
+            AND date(tgl) = curdate( )
+        ");
+		$data1 = $query->result_array();
+
+
+        $this->db2 = $this->load->database('ems2',true);
+		
+        $data2 = $this -> db2 -> query( "
+        SELECT
+            date( CURDATE() ) AS tglnow,
+            'DATA' as ket,
+            COUNT( CASE WHEN `bucket` = 'CPD' THEN STATUS END ) AS CPD,
+            COUNT( CASE WHEN `bucket` = 'XDPD' THEN STATUS END ) AS XDPD,
+            COUNT( CASE WHEN `bucket` = '30DPD' THEN STATUS END ) AS 30DPD,
+            COUNT( CASE WHEN `bucket` = '60DPD' THEN STATUS END ) AS 60DPD,
+            COUNT( CASE WHEN `bucket` = '90DPD' THEN STATUS END ) AS 90DPD,
+            COUNT( CASE WHEN `company` = '0' THEN STATUS END ) AS totdat
+        FROM
+            `campains` AS t1
+        WHERE
+            `company` = 0
+            AND date(tgl) = curdate( )
+        GROUP BY
+            tglnow
+        UNION ALL
+        SELECT
+            date( CURDATE() ) AS tglnow,
+            'CONTACT' as ket,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = 'CPD' THEN `status` END ) AS CPD,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = 'XDPD' THEN STATUS END ) AS od1,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = '30DPD' THEN STATUS END ) AS od2,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = '60DPD' THEN STATUS END ) AS od3,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' AND `bucket` = '90DPD' THEN STATUS END ) AS od4,
+            COUNT( CASE WHEN `status` LIKE '%DONE%' THEN STATUS END ) AS totdat
+        FROM
+            `campains` AS t1
+        WHERE
+            `company` = 0
+            AND date(tgl) = curdate( )
+        GROUP BY
+            tglnow
+        UNION ALL
+        SELECT
+            date( CURDATE() ) AS tglnow,
+            'UNCONTACT' as ket,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = 'CPD' THEN `status` END ) AS CPD,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = 'XDPD' THEN STATUS END ) AS od1,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = '30DPD' THEN STATUS END ) AS od2,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = '60DPD' THEN STATUS END ) AS od3,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' AND `bucket` = '90DPD' THEN STATUS END ) AS od4,
+            COUNT( CASE WHEN `status` LIKE '%RUN%' THEN STATUS END ) AS totdat
+        FROM
+            `campains` AS t1
+        WHERE
+            `company` = 0
+            AND date(tgl) = curdate( )
+        GROUP BY
+            tglnow
+        UNION ALL
+        SELECT
+            date( CURDATE() ) AS tglnow,
+            'INVALID' as ket,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = 'CPD' THEN `status` END ) AS CPD,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = 'XDPD' THEN STATUS END ) AS od1,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = '30DPD' THEN STATUS END ) AS od2,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = '60DPD' THEN STATUS END ) AS od3,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' AND `bucket` = '90DPD' THEN STATUS END ) AS od4,
+            COUNT( CASE WHEN `status` LIKE '%NEW%' THEN STATUS END ) AS totdat
+        FROM
+            `campains_fail_gojek` AS t1
+        WHERE
+            `company` = 0
+            AND date(tgl) = curdate( )
+        ")->result_array();
+
+        $idx = 0;
+        $jData = array();
+
+        foreach ($data1 as $row) {
+            foreach ($data2 as $rw) {
+                if ($row['ket'] == $rw['ket']) {
+                    $row['CPD'] += $rw['CPD'];
+                    $row['XDPD'] += $rw['XDPD'];
+                    $row['30DPD'] += $rw['30DPD'];
+                    $row['60DPD'] += $rw['60DPD'];
+                    $row['90DPD'] += $rw['90DPD'];
+                    $row['totdat'] += $rw['totdat'];
+                }
+            }
+            $jData[$idx]['tglnow'] = $row['tglnow'];
+            $jData[$idx]['ket'] = $row['ket'];
+            $jData[$idx]['CPD'] = $row['CPD'];
+            $jData[$idx]['XDPD'] = $row['XDPD'];
+            $jData[$idx]['30DPD'] = $row['30DPD'];
+            $jData[$idx]['60DPD'] = $row['60DPD'];
+            $jData[$idx]['90DPD'] = $row['90DPD'];
+            $jData[$idx]['totdat'] = $row['totdat'];
+            $idx++;
+        }
+
+        // var_dump($data1);
+        // echo '<br>'.'<br>'.'<br>'.'<br>'.'<br>'.'<br>'.'<br>';
+        // var_dump($jData);
+        // die();
+		
+        return $jData;
+		// return $result;
+	}
+	
+	function get_data(){
+		$this->db = $this->load->database('ems',true);
+        $query = $this-> db -> query( "
+            SELECT tgl AS tglnow,
+            flag,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 8pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 815pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 830pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 845pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 9pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 915pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 930pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 945pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 10pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1015pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1030pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1045pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 11pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1115pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1130pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1145pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 12pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1215pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1230pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1245pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 1am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 115am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 130am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 145am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 2am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 215am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 230am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 245am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 3am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 315am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 330am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 345am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 4am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 415am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 430am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 445am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 5am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 515am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 530am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 545am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 6am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 615am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 630am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 645am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 7am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='15' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 715am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='30' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 730am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='45' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 745am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='20' AND flag = 'CPD' ORDER BY jam ASC LIMIT 1),0) AS 8am
+            FROM temp_chart WHERE DATE(NOW()) and flag = 'CPD' GROUP BY tgl
+            
+            UNION ALL
+            
+            SELECT tgl AS tglnow,
+            flag,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 8pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 815pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 830pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 845pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 9pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 915pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 930pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 945pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 10pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1015pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1030pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1045pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 11pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1115pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1130pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1145pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 12pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1215pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1230pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1245pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 1am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 115am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 130am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 145am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 2am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 215am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 230am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 245am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 3am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 315am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 330am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 345am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 4am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 415am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 430am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 445am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 5am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 515am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 530am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 545am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 6am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 615am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 630am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 645am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 7am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='15' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 715am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='30' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 730am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='45' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 745am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='20' AND flag = 'XDPD' ORDER BY jam ASC LIMIT 1),0) AS 8am
+            FROM temp_chart WHERE DATE(NOW()) and flag = 'XDPD' GROUP BY tgl
+            
+            
+            UNION ALL
+            
+            
+            SELECT tgl AS tglnow,
+            flag,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 8pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 815pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 830pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 845pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 9pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 915pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 930pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 945pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 10pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1015pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1030pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1045pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 11pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1115pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1130pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1145pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 12pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1215pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1230pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1245pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 1am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 115am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 130am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 145am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 2am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 215am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 230am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 245am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 3am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 315am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 330am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 345am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 4am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 415am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 430am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 445am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 5am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 515am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 530am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 545am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 6am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 615am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 630am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 645am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 7am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='15' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 715am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='30' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 730am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='45' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 745am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='20' AND flag = '30DPD' ORDER BY jam ASC LIMIT 1),0) AS 8am
+            FROM temp_chart WHERE DATE(NOW()) and flag = '30DPD' GROUP BY tgl
+            
+            
+            UNION ALL
+            
+            SELECT tgl AS tglnow,
+            flag,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 8pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 815pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 830pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 845pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 9pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 915pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 930pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 945pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 10pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1015pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1030pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1045pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 11pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1115pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1130pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1145pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 12pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1215pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1230pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1245pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 1am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 115am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 130am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 145am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 2am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 215am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 230am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 245am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 3am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 315am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 330am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 345am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 4am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 415am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 430am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 445am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 5am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 515am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 530am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 545am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 6am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 615am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 630am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 645am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 7am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='15' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 715am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='30' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 730am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='45' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 745am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='20' AND flag = '60DPD' ORDER BY jam ASC LIMIT 1),0) AS 8am
+            FROM temp_chart WHERE DATE(NOW()) and flag = '60DPD' GROUP BY tgl
+
+
+            UNION ALL
+            
+            SELECT tgl AS tglnow,
+            flag,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 8pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 815pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 830pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='08' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 845pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 9pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 915pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 930pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='09' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 945pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 10pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1015pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1030pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='10' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1045pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 11pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1115pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1130pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='11' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1145pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 12pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1215pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1230pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='12' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1245pm,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 1am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 115am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 130am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='13' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 145am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 2am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 215am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 230am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='14' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 245am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 3am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 315am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 330am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='15' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 345am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 4am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 415am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 430am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='16' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 445am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 5am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 515am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 530am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='17' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 545am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 6am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 615am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 630am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='18' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 645am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 7am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='15' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 715am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='30' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 730am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='19' AND MINUTE(jam) ='45' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 745am,
+            IFNULL((SELECT IFNULL(total,0) FROM temp_chart WHERE HOUR(jam) ='20' AND flag = '90DPD' ORDER BY jam ASC LIMIT 1),0) AS 8am
+            FROM temp_chart WHERE DATE(NOW()) and flag = '90DPD' GROUP BY tgl
+
+        " );
+		
+		$result = $query->result_array();
+		return $result;
+	}
+	
+}
